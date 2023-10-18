@@ -1,0 +1,84 @@
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+public class TemperatureConverterApp extends JFrame implements ActionListener {
+    // Create a frame
+    private JFrame frame;
+
+    // Create text fields for input and output
+    private JTextField inputField;
+    private JTextField outputField;
+
+    // Create a combo box to select the temperature scale
+    private JComboBox<String> scaleSelector;
+
+    // Constructor
+    public TemperatureConverterApp() {
+        // Create a frame
+        frame = new JFrame("Temperature Converter");
+
+        // Create input and output text fields
+        inputField = new JTextField(10);
+        outputField = new JTextField(10);
+        outputField.setEditable(false);
+
+        // Create a combo box for selecting the temperature scale
+        String[] scales = {"Celsius to Fahrenheit", "Fahrenheit to Celsius", "Celsius to Kelvin", "Kelvin to Celsius"};
+        scaleSelector = new JComboBox<>(scales);
+
+        // Create a convert button
+        JButton convertButton = new JButton("Convert");
+        convertButton.addActionListener(this);
+
+        // Create a panel for the input fields
+        JPanel inputPanel = new JPanel();
+        inputPanel.add(new JLabel("Enter Temperature: "));
+        inputPanel.add(inputField);
+        inputPanel.add(scaleSelector);
+
+        // Create a panel for the output field
+        JPanel outputPanel = new JPanel();
+        outputPanel.add(new JLabel("Result: "));
+        outputPanel.add(outputField);
+
+        // Create a panel for the convert button
+        JPanel buttonPanel = new JPanel();
+        buttonPanel.add(convertButton);
+
+        // Add components to the frame
+        frame.add(inputPanel, BorderLayout.NORTH);
+        frame.add(outputPanel, BorderLayout.CENTER);
+        frame.add(buttonPanel, BorderLayout.SOUTH);
+
+        frame.setSize(400, 200);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setVisible(true);
+    }
+
+    public static void main(String[] args) {
+        new TemperatureConverterApp();
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        if (e.getActionCommand().equals("Convert")) {
+            String selectedScale = (String) scaleSelector.getSelectedItem();
+            double temperature = Double.parseDouble(inputField.getText());
+            double result = 0.0;
+
+            if (selectedScale.equals("Celsius to Fahrenheit")) {
+                result = (temperature * 9/5) + 32;
+            } else if (selectedScale.equals("Fahrenheit to Celsius")) {
+                result = (temperature - 32) * 5/9;
+            } else if (selectedScale.equals("Celsius to Kelvin")) {
+                result = temperature + 273.15;
+            } else if (selectedScale.equals("Kelvin to Celsius")) {
+                result = temperature - 273.15;
+            }
+
+            outputField.setText(Double.toString(result));
+        }
+    }
+}
