@@ -1,0 +1,118 @@
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+public class CalculatorApp extends JFrame implements ActionListener {
+    // Create a frame
+    private JFrame frame;
+
+    // Create a text field
+    private JTextField textField;
+
+    // Store the operands and operator
+    private double firstOperand, secondOperand, result;
+    private String operator;
+
+    // Constructor
+    public CalculatorApp() {
+        // Create a frame
+        frame = new JFrame("Calculator");
+
+        // Create a text field
+        textField = new JTextField();
+
+        // Set the default operator to empty
+        operator = "";
+
+        // Create number buttons and operators
+        JButton[] numberButtons = new JButton[10];
+        for (int i = 0; i < 10; i++) {
+            numberButtons[i] = new JButton(String.valueOf(i));
+            numberButtons[i].addActionListener(this);
+        }
+
+        JButton addButton = new JButton("+");
+        JButton subtractButton = new JButton("-");
+        JButton multiplyButton = new JButton("*");
+        JButton divideButton = new JButton("/");
+        JButton equalButton = new JButton("=");
+        JButton clearButton = new JButton("C");
+
+        // Add action listeners to operator buttons
+        addButton.addActionListener(this);
+        subtractButton.addActionListener(this);
+        multiplyButton.addActionListener(this);
+        divideButton.addActionListener(this);
+        equalButton.addActionListener(this);
+        clearButton.addActionListener(this);
+
+        // Create a panel for the number buttons
+        JPanel numberPanel = new JPanel();
+        numberPanel.setLayout(new GridLayout(4, 3));
+        for (int i = 1; i < 10; i++) {
+            numberPanel.add(numberButtons[i]);
+        }
+        numberPanel.add(numberButtons[0]);
+        numberPanel.add(clearButton);
+
+        // Create a panel for the operator buttons
+        JPanel operatorPanel = new JPanel();
+        operatorPanel.setLayout(new GridLayout(5, 1));
+        operatorPanel.add(addButton);
+        operatorPanel.add(subtractButton);
+        operatorPanel.add(multiplyButton);
+        operatorPanel.add(divideButton);
+        operatorPanel.add(equalButton);
+
+        // Create a panel for the text field
+        JPanel textPanel = new JPanel();
+        textPanel.add(textField);
+
+        // Add components to the frame
+        frame.add(textPanel, BorderLayout.NORTH);
+        frame.add(numberPanel, BorderLayout.CENTER);
+        frame.add(operatorPanel, BorderLayout.EAST);
+
+        frame.setSize(400, 400);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setVisible(true);
+    }
+
+    public static void main(String[] args) {
+        new CalculatorApp();
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        String command = e.getActionCommand();
+        if ((command.charAt(0) >= '0' && command.charAt(0) <= '9') || command.equals(".")) {
+            textField.setText(textField.getText() + command);
+        } else if (command.equals("C")) {
+            textField.setText("");
+            firstOperand = secondOperand = 0;
+            operator = "";
+        } else if (command.equals("+") || command.equals("-") || command.equals("*") || command.equals("/")) {
+            firstOperand = Double.parseDouble(textField.getText());
+            operator = command;
+            textField.setText("");
+        } else if (command.equals("=")) {
+            secondOperand = Double.parseDouble(textField.getText());
+            switch (operator) {
+                case "+":
+                    result = firstOperand + secondOperand;
+                    break;
+                case "-":
+                    result = firstOperand - secondOperand;
+                    break;
+                case "*":
+                    result = firstOperand * secondOperand;
+                    break;
+                case "/":
+                    result = firstOperand / secondOperand;
+                    break;
+            }
+            textField.setText(String.valueOf(result));
+        }
+    }
+}
